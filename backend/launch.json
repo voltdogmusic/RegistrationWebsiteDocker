@@ -1,0 +1,12 @@
+{
+  "name": "Debug in Container",
+  "type": "node",
+  "request": "attach",
+  "port": 9229,
+  "preLaunchTask": "npm: watch",
+  "localRoot": "${workspaceFolder}",
+  "remoteRoot": "/workspace",
+  "protocol": "inspector",
+  "program": "${workspaceFolder}/src/extension.ts"
+}
+  

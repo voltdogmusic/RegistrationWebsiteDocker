@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Thomas Lee Bootstrap Site</title>
+
+    <!--BOOTSTRAP-->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="scss/main.css">
+
+    <!--PARTICLE.JS-->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="stylesheet" href="css/particleAndLoginStyles.css">
+
+    <!--SLICEBOX-->
+    <link rel="stylesheet" type="text/css" href="css/sliceboxCombined.css" />
+    <!--ORDERING OF SCRIPTS MATTERS HERE, SLICEBOX.JS NEEDS ACCESS TO THIS PARTICULAR VERSIONS OF JQ AND IT NEEDS TO BE BEFORE IT-->
+    <!--JQ required for everything -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!--required for everything -->
+    <script type="text/javascript" src="js/modernizr.custom.46884.js"></script>
+    <!--required for everything -->
+    <script type="text/javascript" src="js/jquery.slicebox.js"></script>
+
+</head>
+<!--main color #e3f2fd-->
+
+<body>
+
+    <!--NAVBAR + LOGIN POSITION SCRIPT**********************************************************-->
+    <nav class="navbar navbar-expand-md navbar-light " style="background-color: #e3f2fd;">
+
+        <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Brand</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+
+                <!--shown on lg and above-->
+                <div class="btn-group dropright d-none d-lg-block ">
+
+                    <button type="button" class="btn pt-1.9">
+                        This Was
+                    </button>
+
+                    <button type="button" class="btn dropdown-toggle dropdown-toggle-split pt-0" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropright</span>
+                    </button>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                        <button class="dropdown-item" type="button">Made</button>
+                        <button class="dropdown-item" type="button">By</button>
+                        <div class="dropdown-divider"></div>
+                        <button onclick="window.location.href = 'https://www.linkedin.com/in/thomas-lee-609453181/';"
+                            class="dropdown-item" type="button">tlee7222@gmail.com
+                        </button>
+                    </div>
+                </div>
+
+
+            </ul>
+        </div>
+
+
+        <div class="mx-auto order-0">
+            <a class="navbar-brand mx-auto pt-0 " href="#">Welcome</a>
+            <button onclick="toggleLogin()" class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target=".dual-collapse2">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+
+
+        <script>
+
+            var loginSwitch = true;
+
+            function toggleLogin() {
+
+
+                if (loginSwitch) {
+                    document.getElementById("login").style.cssText = "position: static;";
+                    loginSwitch = false;
+                } else {
+                    document.getElementById("login").style.cssText = "position: absolute;";
+                    loginSwitch = true;
+                }
+
+            }
+        </script>
+
+        <div class="navbar-collapse collapse w-100 order-3 order-md-4 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Right</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </ul>
+        </div>
+
+    </nav>
+    <!-------------------------------------------------------------------->
+
+    <!--PARTICLEJS AND LOGIN******************************************************-->
+    <div id="particles-js">
+        <div id="login">
+            <form id="topForm">
+                <div>
+                    <label>E-mail</label>
+                    <br>
+                    <input id="emailTop" type="text" placeholder="E-mail">
+                </div>
+                <div>
+                    <label>Password</label>
+                    <br>
+                    <input id="passwordTop" type="text" placeholder="Password">
+                </div>
+                <button id="loginButton" class="btn btn-secondary "
+                    style=" color: black; background-color: #e3f2fd;">Login
+                </button>
+            </form>
+        </div>
+
+        <script>
+            const herokuURL = 'http://localhost:8080';
+            //const localURL = 'http://localhost:3002';
+
+            let passwordTop, emailTop = '';
+
+            $(document).ready(function () {
+                $('#loginButton').click(function (e) {
+                    e.preventDefault();
+                    emailTop = $('#emailTop').val();
+                    passwordTop = $('#passwordTop').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: herokuURL + '/api/user/login',
+                        data: JSON.stringify({ "email": emailTop, "password": passwordTop }),
+                        success: function (data) {
+
+
+                            var span = document.createElement("DIV");
+                            span.id = "::addedSpan2";
+                            span.style.cssText = 'font-size: 1rem; color: #28a745;';
+                            var t = document.createTextNode(" Login Successful!");
+                            span.appendChild(t);
+                            document.getElementById("topForm").appendChild(span);
+
+
+                            //this actually logs the JWT, so i guess would use this later on for to access other routes
+                            console.log('logged in');
+                            console.log(data.responseText);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log("Login error");
+                            //display response text somewhere
+                            console.log(jqXHR.responseText);
+                            console.log(textStatus);
+                            console.log(errorThrown);
+                        },
+                        contentType: "application/json",
+                        dataType: "text",
+                        headers: {
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                    });
+                });
+            });
+        </script>
+
+    </div>
+    <script>
+        particlesJS.load('particles-js', 'particles.json', function () {
+            console.log('particles.json loaded...');
+        });
+    </script>
+    <!-------------------------------------------------------------------->
+
+    <!--Section1******************************************************-->
+    <section class="section-light">
+    </section>
+    <!-------------------------------------------------------------------->
+
+    <!--Card and Accordion******************************************************-->
+    <div style="display: flex; flex-direction: row; width: 100%">
+
+        <!--Card******************************************************-->
+        <div class="card" id="singleCard" style="width: 18rem; flex-shrink: 0;">
+            <img class="card-img-top" src="images/medicalcomputer.png" alt="images/medicalcomputer.png">
+            <div class="card-body">
+                <h5 class="card-title">Time to save this operation</h5>
+                <p class="card-text">With a plan so good you can skip your next doctor's appointment</p>
+                <a href="#" class="btn btn-secondary " style=" color: black; background-color: #e3f2fd;">Free Health</a>
+            </div>
+        </div>
+
+        <!--Accordion******************************************************-->
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                            aria-expanded="true" aria-controls="collapseOne">
+                            This is a full stack website created by Thomas Lee and deployed with Heroku-
+                            tlee7222@gmail.com
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
+                        3
+                        wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
+                        laborum
+                        eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
+                        nulla
+                        assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
+                        nesciunt
+                        sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
+                        farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                        labore sustainable VHS.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo"
+                            aria-expanded="false" aria-controls="collapseTwo">
+                            The back end was created with Node.js, Express.js and MongoDB/Mongoose, try creating an
+                            account
+                            and logging in!
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
+                        3
+                        wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
+                        laborum
+                        eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
+                        nulla
+                        assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
+                        nesciunt
+                        sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
+                        farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                        labore sustainable VHS.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree"
+                            aria-expanded="false" aria-controls="collapseThree">
+                            The front end was created with Bootstrap 4, jQuery and particles.js
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div class="card-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
+                        3
+                        wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
+                        laborum
+                        eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
+                        nulla
+                        assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred
+                        nesciunt
+                        sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
+                        farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus
+                        labore sustainable VHS.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        /* Extra small devices (phones, 640px and down) */
+        @media only screen and (max-width: 640px) {
+            #singleCard {
+                display: none;
+            }
+
+            #accordion {
+                transform: translateX(-15px);
+            }
+        }
+    </style>
+
+    <!-------------------------------------------------------------------->
+
+    <!--Section2******************************************************-->
+    <section class="section-light2">
+    </section>
+    <!-------------------------------------------------------------------->
+
+    <!-- Particles-js2 -->
+    <div id="particles-js2"></div>
+    <script>
+        particlesJS.load('particles-js2', 'particles.json', function () {
+            console.log('particles.json loaded...');
+        });
+    </script>
+    <style>
+        #particles-js2 {
+            background: transparent;
+            height: 500px;
+            width: 100%;
+            z-index: 0;
+            position: absolute;
+        }
+    </style>
+    <!-------------------------------------------------------------------->
+
+    <!--SLICEBOX********************************************************-->
+    <div class="sliceBoxWrapper">
+
+
+        <ul id="sb-slider" class="sb-slider">
+            <li>
+                <a href="#" target="_blank"><img src="images/blueManSmall.png" alt="image1" /></a>
+                <div class="sb-description">
+                    <h3 style="text-align: center">A Creative Lifesaver</h3>
+                </div>
+            </li>
+            <li>
+                <a href="#" target="_blank"><img src="images/stickyNotesSmall.png" alt="image2" /></a>
+                <div class="sb-description">
+                    <h3 style="text-align: left; color: #fff">That sticks to your plan</h3>
+                </div>
+            </li>
+            <li>
+                <a href="#" target="_blank"><img src="images/teamworkSmall.png" alt="image1" /></a>
+                <div class="sb-description">
+                    <h3 style="text-align: right">To invigorate your team</h3>
+                </div>
+            </li>
+        </ul>
+
+        <style>
+            h3 {
+                font-weight: 800;
+                color: #000000;
+                text-shadow: 3px 3px 2px #E3F2FD;
+            }
+        </style>
+
+
+        <div id="shadow" class="shadow"></div>
+
+        <div id="nav-arrows" class="nav-arrows">
+            <a href="#">Next</a>
+            <a href="#">Previous</a>
+        </div>
+
+        <div id="nav-dots" class="nav-dots">
+            <span class="nav-dot-current"></span>
+            <span></span>
+            <span></span>
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        $(function () {
+
+            var Page = (function () {
+
+                var $navArrows = $('#nav-arrows').hide(),
+                    $navDots = $('#nav-dots').hide(),
+                    $nav = $navDots.children('span'),
+                    $shadow = $('#shadow').hide(),
+                    slicebox = $('#sb-slider').slicebox({
+                        onReady: function () {
+
+                            $navArrows.show();
+                            $navDots.show();
+                            $shadow.show();
+
+                        },
+                        onBeforeChange: function (pos) {
+
+                            $nav.removeClass('nav-dot-current');
+                            $nav.eq(pos).addClass('nav-dot-current');
+
+                        }
+                    }),
+
+                    init = function () {
+
+                        initEvents();
+
+                    },
+                    initEvents = function () {
+
+                        // add navigation events
+                        $navArrows.children(':first').on('click', function () {
+
+                            slicebox.next();
+                            return false;
+
+                        });
+
+                        $navArrows.children(':last').on('click', function () {
+
+                            slicebox.previous();
+                            return false;
+
+                        });
+
+                        $nav.each(function (i) {
+
+                            $(this).on('click', function (event) {
+
+                                var $dot = $(this);
+
+                                if (!slicebox.isActive()) {
+
+                                    $nav.removeClass('nav-dot-current');
+                                    $dot.addClass('nav-dot-current');
+
+                                }
+
+                                slicebox.jump(i + 1);
+                                return false;
+
+                            });
+
+                        });
+
+                    };
+
+                return { init: init };
+
+            })();
+
+            Page.init();
+
+        });
+    </script>
+    <!-------------------------------------------------------------------->
+
+    <!--Section3******************************************************-->
+    <section class="section-light3">
+    </section>
+    <!-------------------------------------------------------------------->
+
+    <!--Form******************************************************-->
+    <div class="formWrapper">
+        <h1 id="createAnAccount" style="margin-bottom: 2rem">Create an account
+            <span id="addToMe"></span>
+        </h1>
+        <form class="needs-validation" novalidate>
+            <div class="form-row">
+                <div class="col-md-4 mb-3">
+                    <label for="firstName">First name</label>
+                    <input type="text" class="form-control" id="firstName" placeholder="First name" value="Mark"
+                        required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please enter your first name.
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="lastName">Last name</label>
+                    <input type="text" class="form-control" id="lastName" placeholder="Last name" value="Otto" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please enter your last name.
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="emailBottom">Email</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="emailBottom" placeholder="At least 6 characters"
+                            aria-describedby="inputGroupPrepend" minlength="6" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid email
+                        </div>
+                        <div class="valid-feedback" id="emailPositiveFeedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback-2" id="emailAlreadyExists">
+                            Email already exists
+                        </div>
+                        <style>
+                            .invalid-feedback-2 {
+                                display: none;
+                                width: 100%;
+                                margin-top: 0.25rem;
+                                font-size: 80%;
+                                color: #dc3545;
+                            }
+                        </style>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-6 mb-3">
+                    <label for="city">City</label>
+                    <input type="text" class="form-control" id="city" placeholder="City" required>
+                    <div class="invalid-feedback">
+                        Please provide a valid city.
+                    </div>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="state">State</label>
+                    <input type="text" class="form-control" id="state" placeholder="State" required>
+                    <div class="invalid-feedback">
+                        Please provide a valid state.
+                    </div>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="passwordBottom">Password</label>
+                    <input type="text" class="form-control" id="passwordBottom" placeholder="At least 6 characters"
+                        minlength="6" required>
+                    <div class="invalid-feedback">
+                        Password must be 6 characters.
+                    </div>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+                    <label class="form-check-label" for="invalidCheck">
+                        Agree to terms and conditions
+                    </label>
+                    <div class="invalid-feedback">
+                        You must agree before submitting.
+                    </div>
+                </div>
+            </div>
+            <button id="registerButton" class="btn btn-secondary "
+                style=" color: black; background-color: #e3f2fd;">Submit
+                form
+            </button>
+        </form>
+    </div>
+    <script>
+
+        //makes it red, displays invalid message, makes the x
+
+
+        //makes it valid
+        //document.getElementById("emailBottom").classList.add("is-valid");
+
+
+        //doesn't work, can't apply p classes...perhaps need to chang styles to display:none
+        //document.getElementById("emailBottom").classList.add("invalid");
+        //document.getElementById("emailBottom").classList.add("is-valid");
+
+        //not sure
+        //document.getElementById("emailBottom").classList.remove("needs-validation");
+
+        //document.getElementById("emailBottom").classList.remove("was-validated");
+
+
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        //you must check all nodes within the form
+                        if (form[0].checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        event.preventDefault();
+                        form.classList.add('was-validated');
+
+                        register();
+                    }, false);
+                });
+
+
+            }, false);
+
+        })();
+
+
+        function register() {
+
+            //resetting error messages under the email box
+            document.getElementById("emailAlreadyExists").style.cssText = 'display: none;';
+            document.getElementById("emailBottom").classList.remove("is-invalid");
+
+
+            //Clear error messages about email and password length
+            //also clears success message, but that doesn't matter
+            var myNode = document.getElementById("addToMe");
+            while (myNode.firstChild) {
+                myNode.removeChild(myNode.firstChild);
+            }
+
+            let passwordBottom, emailBottom, firstName, lastName, city, state = '';
+            $(document).ready(function () {
+                firstName = $('#firstName').val();
+                lastName = $('#lastName').val();
+                city = $('#city').val();
+                state = $('#state').val();
+                emailBottom = $('#emailBottom').val();
+                passwordBottom = $('#passwordBottom').val();
+
+                if (emailBottom.length < 6) {
+                    var span = document.createElement("DIV");
+                    span.id = "::addedSpan";
+                    span.style.cssText = 'font-size: 1rem; color: #FF0000;';
+                    var t = document.createTextNode(" Email must be at least 6 characters");
+                    span.appendChild(t);
+                    document.getElementById("addToMe").appendChild(span);
+                    return;
+                }
+
+                if (emailBottom.length >= 6 && passwordBottom.length < 6) {
+                    var span = document.createElement("DIV");
+                    span.id = "::addedSpan2";
+                    span.style.cssText = 'font-size: 1rem; color: #FF0000;';
+                    var t = document.createTextNode(" Password must be at least 6 characters");
+                    span.appendChild(t);
+                    document.getElementById("addToMe").appendChild(span);
+                    return;
+                }
+
+                console.log(firstName, lastName, city, state, emailBottom, passwordBottom);
+
+                $.ajax({
+                    type: 'POST',
+                    url: herokuURL + '/api/user/register',
+                    data: JSON.stringify({
+                        "firstName": firstName,
+                        "lastName": lastName,
+                        "email": emailBottom,
+                        "city": city,
+                        "state": state,
+                        "password": passwordBottom
+                    }),
+                    success: function (data) {
+                        var span = document.createElement("DIV");
+                        span.id = "::addedSpan2";
+                        span.style.cssText = 'font-size: 2rem; color: #28a745;';
+                        var t = document.createTextNode(" Account created!");
+                        span.appendChild(t);
+                        document.getElementById("addToMe").appendChild(span);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                        function emailExists() {
+                            var span = document.createElement("DIV");
+                            span.id = "::addedSpan2";
+                            span.style.cssText = 'font-size: 1rem; color: #FF0000;';
+                            var t = document.createTextNode(" Email exists");
+                            span.appendChild(t);
+                            document.getElementById("addToMe").appendChild(span);
+
+                            //remove positive feedback
+                            document.getElementById("emailPositiveFeedback").style.cssText = 'display: none;';
+
+                            //add email already exists
+                            document.getElementById("emailAlreadyExists").style.cssText = 'display: inline;';
+
+                            //remove was-validated from email section
+                            //document.getElementById("emailBottom").classList.remove("was-validated");
+                            //document.getElementById("emailBottom").classList.remove("is-valid");
+                            //document.getElementById("emailBottom").classList.remove("valid");
+                            document.getElementById("emailBottom").classList.add("is-invalid");
+                            //document.getElementById("emailBottom").classList.add("invalid");
+
+                        }
+
+                        if (jqXHR.responseText == 'Email already exists') {
+                            emailExists();
+                        }
+
+                    },
+                    contentType: "application/json",
+                    dataType: 'json',
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                });
+            });
+        }
+
+
+    </script>
+    <!-------------------------------------------------------------------->
+
+    <!--Section4 And Social Media Links******************************************************-->
+    <section class="section-light4">
+        <div class="smlinks">
+            <link rel="stylesheet"
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            <a href="https://www.linkedin.com/in/thomas-lee-609453181/" class="fa fa-linkedin"></a>
+            <div>
+                <a class='email' href="mailto:tlee7222@gmail.com">Contact</a>
+            </div>
+        </div>
+    </section>
+    <!-------------------------------------------------------------------->
+
+
+
+    <div id="root"></div>
+</body>
+
+</html>
