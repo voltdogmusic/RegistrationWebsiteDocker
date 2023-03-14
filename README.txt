@@ -4,4 +4,5 @@ Fullstack website supporting:
  
 •	Made with 
     Backend : Node, Express, MongoDB, Mongoose 
-    Frontend : Bootstrap 4, jQuery, particle.js,
+    Frontend : Bootstrap 4, jQuery, particle.js
+    Deployed with docker and docker-compose
